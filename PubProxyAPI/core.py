@@ -3,7 +3,24 @@ import requests
 import json
 
 class Proxy(object):
-    """A proxy object
+    """A proxy object.
+    Attributes:
+        * ip - string
+        * port - int
+        * ip_port - string
+        * country - string
+        * last_check - string (date and time)
+        * level - float
+        * type - string (http, socks4, socks5)
+        * speed - float
+        Support:
+        * https - bool
+        * get - bool
+        * post - bool
+        * cookies - bool
+        * referer - bool
+        * user_agent - bool
+        * google - bool (if can reach Google)
     """
     def __init__(self, js):
         """Proxy objects are initialized by the JSON get from pubproxy.com
@@ -12,10 +29,10 @@ class Proxy(object):
         self.port = int(js["port"])
         self.ip_port = js["ipPort"]
         self.country = js["country"]
-        self.last_checked = js["last_checked"]
+        self.last_check = js["last_checked"]
         self.level = js["proxy_level"]
         self.type = js["type"]
-        self.speed = int(js["speed"])
+        self.speed = float(js["speed"])
         support = js["support"]
         self.https = bool(support["https"])
         self.get = bool(support["get"])
@@ -26,6 +43,25 @@ class Proxy(object):
         self.google = bool(support["google"])
 
 def get_proxies(api_key=None, level=None, protocol=None, last_check=None, limit=20, country=None, not_country=None, port=None, google=None, https=None, get=None, post=None, user_agent=None, cookies=None, referer=None):
+    """Get a list of proxies from pubproxy.com. Return a list of Proxy objects.
+    There's a limit of 100 requests per hour without API key.
+    :param api_key: optional API key for pubproxy.com
+    :param level: anonymity level ('anonymous'/'elite')
+    :param protocol: protocol/type of proxy ('http'/'socks4'/'socks5')
+    :param last_check: get proxies verified not later than this time (minutes)
+    :param limit: max. number of proxies to fetch (max. 20 without API Key)
+    :param country: code or list of codes of countries to get proxies from
+    :param not_country: code or list of codes of countries for NOT getting proxies from
+    :param port: port of proxies
+    :param google: get proxies that works on Google?
+    :param https: get proxies that support HTTPS requests?
+    :param get: get proxies that support GET requests?
+    :param post: get proxies that support POST requests?
+    :param user_agent: get proxies that support USER_AGENT requests?
+    :param cookies: get proxies that support COOKIES requests?
+    :param referer: get proxies that support REFERER requests?
+    """
+
     URL = "http://pubproxy.com/api/proxy?"
     loc = locals()
     
