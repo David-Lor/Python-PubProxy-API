@@ -13,7 +13,7 @@ class Proxy(object):
         * level - float
         * type - string (http, socks4, socks5)
         * speed - float
-        Support:
+        Support tags:
         * https - bool
         * get - bool
         * post - bool
@@ -60,6 +60,7 @@ def get_proxies(api_key=None, level=None, protocol=None, last_check=None, limit=
     :param user_agent: get proxies that support USER_AGENT requests?
     :param cookies: get proxies that support COOKIES requests?
     :param referer: get proxies that support REFERER requests?
+    :return: list of Proxy objects
     """
 
     URL = "http://pubproxy.com/api/proxy?"
