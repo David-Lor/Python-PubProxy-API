@@ -2,12 +2,6 @@
 import requests
 import json
 
-ANOMYMOUS = "anonymous"
-ELITE = "elite"
-HTTP = "http"
-SOCKS4 = "socks4"
-SOCKS5 = "socks5"
-
 class Proxy(object):
     """A proxy object
     """
@@ -31,7 +25,7 @@ class Proxy(object):
         self.user_agent = bool(support["user_agent"])
         self.google = bool(support["google"])
 
-def get_proxies(api_key=None, level=None, type=None, last_check=None, limit=20, country=None, not_country=None, port=None, google=None, https=None, get=None, post=None, user_agent=None, cookies=None, referer=None):
+def get_proxies(api_key=None, level=None, protocol=None, last_check=None, limit=20, country=None, not_country=None, port=None, google=None, https=None, get=None, post=None, user_agent=None, cookies=None, referer=None):
     URL = "http://pubproxy.com/api/proxy?"
     loc = locals()
     
@@ -52,9 +46,19 @@ def get_proxies(api_key=None, level=None, type=None, last_check=None, limit=20, 
                 country_string += "{},".format(c.upper())
             country_string = country_string[:-1] #Delete last ,
             value = country_string
+        
+        elif key == "protocol":
+            key = "type"
 
         URL += "{}={}&".format(key, value) #Append key:value to URL
     
-    URL = URL[:-1] #Delete last &
-    return URL #tmp
+    URL = URL[:-1] #Delete last & from URL
+    
+    #Request to the API
     r = requests.get(URL).text
+
+    #Extract data from the API, creating Proxy objects
+    proxies = list()
+    for j in json.loads(r)["data"]:
+        proxies.append(Proxy(j))
+    return proxies
