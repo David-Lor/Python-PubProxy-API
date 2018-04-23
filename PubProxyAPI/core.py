@@ -44,7 +44,7 @@ class Proxy(object):
 
 def get_proxies(api_key=None, level=None, protocol=None, last_check=None, limit=20, country=None, not_country=None, port=None, google=None, https=None, get=None, post=None, user_agent=None, cookies=None, referer=None):
     """Get a list of proxies from pubproxy.com. Return a list of Proxy objects.
-    There's a limit of 100 requests per hour without API key.
+    There's a limit of 100 requests per day without API key.
     :param api_key: optional API key for pubproxy.com
     :param level: anonymity level ('anonymous'/'elite')
     :param protocol: protocol/type of proxy ('http'/'socks4'/'socks5')
