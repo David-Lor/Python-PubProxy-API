@@ -42,7 +42,7 @@ class Proxy(object):
         self.user_agent = bool(support["user_agent"])
         self.google = bool(support["google"])
 
-def get_proxies(api_key=None, level=None, protocol=None, last_check=None, limit=20, country=None, not_country=None, port=None, google=None, https=None, get=None, post=None, user_agent=None, cookies=None, referer=None):
+def get_proxies(api_key=None, level=None, protocol=None, last_check=None, limit=20, country=None, not_country=None, port=None, google=None, https=None, get=None, post=None, user_agent=None, cookies=None, referer=None, speed=None):
     """Get a list of proxies from pubproxy.com. Return a list of Proxy objects.
     There's a limit of 100 requests per day without API key.
     :param api_key: optional API key for pubproxy.com
@@ -60,21 +60,22 @@ def get_proxies(api_key=None, level=None, protocol=None, last_check=None, limit=
     :param user_agent: get proxies that support USER_AGENT requests?
     :param cookies: get proxies that support COOKIES requests?
     :param referer: get proxies that support REFERER requests?
+    :param speed: get proxies that take a max of `speed` seconds to connect to
     :return: list of Proxy objects
     """
 
     URL = "http://pubproxy.com/api/proxy?"
     loc = locals()
-    
+
     #Append all attributes on API URL
     for key in tuple(v for v in loc if loc[v] is not None):
         if key in ("URL", "loc"):
             continue
         value = loc[key]
-        
+
         if key in ("google", "https", "get", "post", "user_agent", "cookies", "referer"): #Bools must be converted to int
             value = int(value)
-        
+
         elif key in ("country", "not_country"): #Convert countries lists to strings
             if type(value) is str:
                 value = (value,)
@@ -83,14 +84,14 @@ def get_proxies(api_key=None, level=None, protocol=None, last_check=None, limit=
                 country_string += "{},".format(c.upper())
             country_string = country_string[:-1] #Delete last ,
             value = country_string
-        
+
         elif key == "protocol":
             key = "type"
 
         URL += "{}={}&".format(key, value) #Append key:value to URL
-    
+
     URL = URL[:-1] #Delete last & from URL
-    
+
     #Request to the API
     r = requests.get(URL).text
 
