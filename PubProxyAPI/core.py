@@ -65,7 +65,9 @@ def get_proxies(api_key=None, level=None, protocol=None, last_check=None, limit=
     """
 
     URL = "http://pubproxy.com/api/proxy?"
-    loc = locals()
+    loc = locals()  # TODO Replace with kwargs
+    
+    # TODO Parse Speed parameter for the API
 
     #Append all attributes on API URL
     for key in tuple(v for v in loc if loc[v] is not None):
